@@ -1,10 +1,10 @@
 #! /bin/bash -l
 #SBATCH --export=NONE
 #SBATCH -M zeus  
-#SBATCH -p workq 
-#SBATCH --time=16:00:00
+#SBATCH -p knlq 
+#SBATCH --time=10:00:00
 #SBATCH --ntasks=28
-#SBATCH --mem=120GB
+#SBATCH --mem=40GB
 #SBATCH -J RFISeeker
 #SBATCH --mail-type FAIL,TIME_LIMIT,TIME_LIMIT_90
 #SBATCH --mail-user sirmcmissile47@gmail.com
@@ -13,6 +13,8 @@ start=`date +%s`
 
 set -x
 {
+
+module load python/3.6.3
 
 obsnum=OBSNUM
 base=BASE
@@ -41,7 +43,7 @@ do
   do
     wait -n $(jobs -p)
   done
-  RFISeeker --obs ${obsnum} --freqChannels ${channels} --seedSigma 6 --floodfillSigma 3 --timeStep ${q} --prefix 6Sigma3Floodfill --DSNRS=False &
+  RFISeeker --obs ${obsnum} --freqChannels ${channels} --seedSigma 6 --floodfillSigma 1 --timeStep ${q} --prefix 6Sigma1Floodfill --DSNRS=False --imgSize 1400&
 
 done
 
