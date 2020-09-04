@@ -2,7 +2,7 @@
 #SBATCH --export=NONE
 #SBATCH -M zeus
 #SBATCH -p workq
-#SBATCH --time=8:59:00
+#SBATCH --time=6:00:00
 #SBATCH --ntasks=28
 #SBATCH --mem=124GB
 #SBATCH -J lrimage
@@ -43,6 +43,7 @@ timeSteps=$((timeSteps+1))
 datadir=${base}processing/${obsnum}
 cd ${datadir}
 
+applysolutions ${obsnum}.ms *.bin
 # for g in `seq 0 ${timeSteps}`;
 # do
 # 	i=$((g*1))
