@@ -39,7 +39,7 @@ cd ${datadir}
 
 cotter -norfi -initflag 2 -timeres 2 -freqres 40 *gpubox* -absmem 60 -edgewidth 118 -m ${obsnum}.metafits -o ${obsnum}.ms
 
-applysolutions ${obsnum}.ms ${calibrationSolution}
+#applysolutions ${obsnum}.ms ${calibrationSolution}
 
 end=`date +%s`
 runtime=$((end-start))
