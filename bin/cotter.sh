@@ -12,9 +12,12 @@
 start=`date +%s`
 
 source /group/mwa/software/module-reset.sh
-module use /group/mwa/software/modulefiles
-module load MWA_Tools/mwa-sci
-module list
+# module use /group/mwa/software/modulefiles
+# module load MWA_Tools/mwa-sci
+# module list
+
+module load singularity
+
 
 set -x 
 
@@ -37,7 +40,8 @@ datadir=${base}processing/${obsnum}
 
 cd ${datadir}
 
-cotter -norfi -initflag 2 -timeres 2 -freqres 40 *gpubox* -absmem 60 -edgewidth 118 -m ${obsnum}.metafits -o ${obsnum}.ms
+singularity exec /pawsey/mwa/singularity/cotter/cotter_latest.sif cotter -norfi -initflag 2 -timeres 2 -freqres 40 *gpubox* \
+                    -absmem 118 -edgewidth 80 -m ${obsnum}.metafits -o ${obsnum}.ms -apply ${calibrationSolution}
 
 #applysolutions ${obsnum}.ms ${calibrationSolution}
 
