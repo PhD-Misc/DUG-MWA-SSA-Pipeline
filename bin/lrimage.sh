@@ -12,10 +12,7 @@
 start=`date +%s`
 
 source /group/mwa/software/module-reset.sh
-module use /group/mwa/software/modulefiles
-module load MWA_Tools/mwa-sci
-module list
-#module load singularity
+module load singularity
 
 
 set -x
@@ -43,25 +40,6 @@ timeSteps=$((timeSteps+1))
 datadir=${base}processing/${obsnum}
 cd ${datadir}
 
-applysolutions ${obsnum}.ms *.bin
-# for g in `seq 0 ${timeSteps}`;
-# do
-# 	i=$((g*1))
-# 	j=$((i+1))
-# 	mkdir "$i"
-# 	#singularity exec -B "$PWD" /group/mwasci/phancock/images/wsclean_2.9.2.img \
-# 	#bash -c "wsclean\
-# 	#	 -quiet -name ${obsnum}-2m-${i} -size 1400 1400 -temp-dir ${i} \
-# 	#	-abs-mem ${mem} -interval ${i} ${j} -channels-out ${channels}\
-# 	#	-weight natural -scale 5amin ${obsnum}.ms"
-
-# 	wsclean -quiet -name ${obsnum}-2m-${i} -size 1400 1400 -temp-dir ${i} \
-#                -abs-mem ${mem} -interval ${i} ${j} -channels-out ${channels}\
-#                -weight natural -scale 5amin ${obsnum}.ms
-
-# 	rm ${obsnum}-2m-*image.fits
-# 	rm -r ${i}
-# done
 
 for g in `seq 0 ${timeSteps}`;
 do
@@ -80,7 +58,8 @@ do
 
 		mkdir temp_${g}_${f1}
 		name=`printf %04d $f`
-		wsclean -quiet -name ${obsnum}-2m-${i}-${name} -size 1400 1400 -temp-dir temp_${g}_${f1} \
+		singularity exec /pawsey/mwa/singularity/wsclean/wsclean_2.9.2.img wsclean -quiet\
+		        -name ${obsnum}-2m-${i}-${name} -size 1400 1400 -temp-dir temp_${g}_${f1} \
 				-abs-mem ${mem} -interval ${i} ${j} -channel-range ${f1} ${f2}\
 				-weight natural -scale 5amin -abs-mem 30 ${obsnum}.ms &
 
