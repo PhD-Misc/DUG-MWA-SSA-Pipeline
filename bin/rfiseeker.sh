@@ -1,7 +1,6 @@
 #! /bin/bash -l
-#SBATCH --export=NONE
-#SBATCH -M zeus  
-#SBATCH -p knlq 
+#SBATCH --export=NONE 
+#SBATCH -p workq
 #SBATCH --time=10:00:00
 #SBATCH --ntasks=28
 #SBATCH --mem=40GB
@@ -14,14 +13,16 @@ start=`date +%s`
 set -x
 {
 
-module load python/3.6.3
+#module load python/3.6.3
+module load singularity
 
 obsnum=OBSNUM
 base=BASE
 timeSteps=
 channels=
+neg="0"
 
-while getopts 's:f:' OPTION
+while getopts 's:f:n:' OPTION
 do
     case "$OPTION" in
         s)
@@ -29,6 +30,9 @@ do
             ;;
         f)
             channels=${OPTARG}
+            ;;
+        n)
+            neg="1"
             ;;
     esac
 done
@@ -43,7 +47,7 @@ do
   do
     wait -n $(jobs -p)
   done
-  RFISeeker --obs ${obsnum} --freqChannels ${channels} --seedSigma 6 --floodfillSigma 1 --timeStep ${q} --prefix 6Sigma1Floodfill --DSNRS=False --imgSize 1400&
+  singularity exec /astro/mwasci/sprabu/singularity_images/rfiseeker_1.0-build-1.sif RFISeeker --obs ${obsnum} --freqChannels ${channels} --seedSigma 6 --floodfillSigma 1 --timeStep ${q} --prefix 6Sigma1Floodfill --DSNRS=False --imgSize 1400&
 
 done
 
@@ -56,6 +60,18 @@ done
 for pid in ${pids[*]}; do
         wait ${pid}
 done
+
+if [[ "${neg}" != "1" ]]; then
+  ## do rfiSeeker for the tail as well
+  echo "running rfiseeker for tail as well...comming soon."
+fi
+
+
+## combine data and make it into a vo table
+combinedMeasurements.py --t1 1 --t2 55 --obs ${obsnum} --prefix 6Sigma3Floodfill --hpc pawsey
+
+cp ${obsnum}-pawsey-measurements.fits /group/mwasci/sprabu/rfiseekerLog
+
 
 end=`date +%s`
 runtime=$((end-start))

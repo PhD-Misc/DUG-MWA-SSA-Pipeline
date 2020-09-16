@@ -1,7 +1,6 @@
 #! /bin/bash -l
 #SBATCH --export=NONE
-#SBATCH -M zeus
-#SBATCH -p copyq
+#SBATCH -p workq
 #SBATCH --time=5:00:00
 #SBATCH --ntasks=8
 #SBATCH --mem=20GB

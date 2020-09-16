@@ -1,6 +1,5 @@
 #! /bin/bash -l
 #BATCH --export=NONE
-#SBATCH -M zeus
 #SBATCH -p workq
 #SBATCH --time=8:00:00
 #SBATCH --ntasks=28
