@@ -68,9 +68,9 @@ fi
 
 
 ## combine data and make it into a vo table
-combinedMeasurements.py --t1 1 --t2 55 --obs ${obsnum} --prefix 6Sigma3Floodfill --hpc pawsey
+combinedMeasurements.py --t1 1 --t2 55 --obs ${obsnum} --prefix 6Sigma1Floodfill --hpc pawsey
 
-cp ${obsnum}-pawsey-measurements.fits /group/mwasci/sprabu/rfiseekerLog
+cp ${obsnum}-pawsey-measurements.fits /astro/mwasci/sprabu/rfiseekerLog
 
 
 end=`date +%s`
